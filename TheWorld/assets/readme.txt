@@ -1,0 +1,1 @@
+Copiare la cartella "textures"
