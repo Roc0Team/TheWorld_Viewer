@@ -20,6 +20,8 @@ var _viewpoint_to_load : int = -1
 
 var _fullscreen := false
 
+var _force_app_to_quit = false
+
 var _initial_player_pos_in_world : Variant = null
 var _initial_player_basis_in_world : Variant = null
 var _initial_camera_position_in_world : Variant = null
@@ -164,7 +166,8 @@ func init():
 	_config_file_name = ""
 	while(_config_file_name == "" and not TWViewer().client_status() <= Globals.Constants.clientstatus_error):
 		_config_file_name = TWViewer().GDN_globals().get_config_filename(0)
-	if _client_status <= Globals.Constants.clientstatus_error:
+	if TWViewer().client_status() <= Globals.Constants.clientstatus_error:
+		_client_status = TWViewer().client_status()
 		return
 	print(str("_config_file_name", "=", _config_file_name))
 		#var config = ConfigFile.new()
@@ -318,10 +321,10 @@ func _notification(_what):
 		$Player/Player.set_player_in_world(false)
 		log_debug("_notification: NOTIFICATION_WM_CLOSE_REQUEST ")
 		var v = TWViewer()
-		if v != null:
-			v.activate_shutdown()
-		else:
+		if v == null or _force_app_to_quit:
 			force_app_to_quit()
+		else:
+			v.activate_shutdown()
 		
 	#elif (_what == Spatial.NOTIFICATION_TRANSFORM_CHANGED):
 		#var viewer : Spatial = TWViewer().GDN_viewer()
@@ -342,6 +345,11 @@ func _exit_tree():
 	
 func _process(_delta):
 
+	if _client_status <= Globals.Constants.clientstatus_error:
+		_force_app_to_quit = true
+		get_tree().get_root().propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
+		return
+		
 	if _saved_time_to_fade_message > 0 and (Time.get_ticks_msec() - _saved_time_to_fade_message) > 3000:
 		$UI/MessageContainer/Message.text = ""
 		_saved_time_to_fade_message = 0
