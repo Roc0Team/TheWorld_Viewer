@@ -19,6 +19,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="TheWorld"
+config/version="0.1.0"
 run/main_scene="res://StartingScene.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
@@ -27,6 +28,7 @@ config/icon="res://icon.svg"
 
 Globals="*res://init/Globals.gd"
 debug_running_game_global="*res://addons/debug_running_game/debug_running_game_global.gd"
+CacheCleaner="*uid://d1rxa7qohhlc3"
 
 [debug]
 
